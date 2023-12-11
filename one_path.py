@@ -1,6 +1,8 @@
 
 import math
 import heapq
+import time
+
 from graph_definition import GraphNode
 
 
@@ -27,9 +29,18 @@ from graph_definition import GraphNode
 и используем -бесконечность вместо бесконечности для инициализации расстояний.
 '''
 
-
+# есть идея - добавить третий алгоритм - поиск полезных циклов
+# но сначала довести до ума надо то что есть
 def dijkstra_max_product_path(node_pool: dict[str, GraphNode], start_node: GraphNode, end_node: GraphNode,
                               quotes: dict[str, float]) -> tuple[float, list[GraphNode]]:
+    # Проверяет, создаст ли добавление new_predecessor в качестве предшественника current_node цикл.
+    def causes_cycle(predecessors: dict[GraphNode, GraphNode], current_node: GraphNode, new_predecessor: GraphNode):
+        node = new_predecessor
+        while node is not None:
+            if node == current_node:
+                return True
+            node = predecessors[node]
+        return False
 
     # функция логарифмирования веса (преобразуем умножение в сложение)
     def log_weight(edge_weight):
@@ -41,15 +52,22 @@ def dijkstra_max_product_path(node_pool: dict[str, GraphNode], start_node: Graph
     predecessors: dict[GraphNode, GraphNode] = {node: None for node in node_pool.values()}  # предыдущие вершины
     priority_queue: list[tuple[int | float, GraphNode]] = [(0, start_node)]
 
+    visited: set[GraphNode] = set()
+
     while priority_queue:
         current_distance, current_node = heapq.heappop(priority_queue)
         current_distance = -current_distance
+
+        if current_node in visited:
+            continue
+
+        visited.add(current_node)
 
         for child in node_pool[current_node.name].children:
             edge_key: str = f'{current_node.name}{child.name}'
             weight: float = quotes[edge_key]
             distance: float = current_distance + log_weight(weight)
-            if distance > distances[child.name]:
+            if distance > distances[child.name] and not causes_cycle(predecessors, child, current_node):
                 distances[child.name] = distance
                 predecessors[child] = current_node
                 heapq.heappush(priority_queue, (-distance, child))
@@ -108,7 +126,7 @@ def test_dijkstra_max_product_path():
         '333777': 1,
 
         '444888': 2,
-        '444333': 10,  # for test
+        '444333': 1.7,  # for test
 
         '555666': 2,
         '555777': 0.1,

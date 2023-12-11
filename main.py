@@ -38,7 +38,7 @@ def visualize_graph(node_pool: dict[str, GraphNode], path: list[GraphNode], quot
 
     print("graph has built \nwaiting visualization...")
     # Визуализация и сохранение графа
-    dot.render('graph_output', view=True)
+    dot.render('graph_output', view=True, format='png')
 
 
 class Main:
