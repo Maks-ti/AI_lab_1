@@ -122,9 +122,9 @@ class Main:
 
     def calculate_by_all_pathes(self, start_node_name: str, end_node_name: str):
         if start_node_name not in self.node_pool:
-            raise KeyError(f'Noe with name {start_node_name} does not exists')
+            raise KeyError(f'Node with name {start_node_name} does not exists')
         if end_node_name not in self.node_pool:
-            raise KeyError(f'Noe with name {end_node_name} does not exists')
+            raise KeyError(f'Node with name {end_node_name} does not exists')
 
         start_node = self.node_pool[start_node_name]
         end_node = self.node_pool[end_node_name]
@@ -153,9 +153,9 @@ class Main:
 
     def calculate_by_one_path(self, start_node_name: str, end_node_name: str):
         if start_node_name not in self.node_pool:
-            raise KeyError(f'Noe with name {start_node_name} does not exists')
+            raise KeyError(f'Node with name {start_node_name} does not exists')
         if end_node_name not in self.node_pool:
-            raise KeyError(f'Noe with name {end_node_name} does not exists')
+            raise KeyError(f'Node with name {end_node_name} does not exists')
 
         start_node = self.node_pool[start_node_name]
         end_node = self.node_pool[end_node_name]

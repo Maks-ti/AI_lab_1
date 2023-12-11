@@ -46,6 +46,15 @@ def dijkstra_max_product_path(node_pool: dict[str, GraphNode], start_node: Graph
     def log_weight(edge_weight):
         return math.log(edge_weight)
 
+    # функция вычисления веса пути
+    def calculate_path_value(path: list[GraphNode]) -> float:
+        nonlocal quotes
+        path_value: float = 1.
+        for i in range(len(path) - 1):
+            key = f"{path[i]}{path[i + 1]}"
+            path_value = path_value * quotes[key]
+        return path_value
+
     # инициализация
     distances: dict[str, float] = {node_name: float('-inf') for node_name in node_pool}  # расстояния
     distances[start_node.name] = 0  # 0 для начального
@@ -80,7 +89,7 @@ def dijkstra_max_product_path(node_pool: dict[str, GraphNode], start_node: Graph
         current_vertex = predecessors[current_vertex]
     path.reverse()  # Переворачиваем путь, чтобы начать с начальной вершины
 
-    return math.exp(distances[end_node.name]), path
+    return calculate_path_value(path), path
 
 
 def test_dijkstra_max_product_path():
@@ -106,7 +115,7 @@ def test_dijkstra_max_product_path():
     node1.children = [node2, node4, node8, node6, node5]
     node2.children = [node3, node4]
     node3.children = [node4, node7]
-    node4.children = [node8, node3]  # node 3 for debug
+    node4.children = [node8, node3]  # node 3 for test
     node5.children = [node6, node7]
     node6.children = [node8]
     node7.children = [node8]
@@ -126,7 +135,7 @@ def test_dijkstra_max_product_path():
         '333777': 1,
 
         '444888': 2,
-        '444333': 1.7,  # for test
+        '444333': 1,  # for test
 
         '555666': 2,
         '555777': 0.1,
